@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invitación · Mis 15</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Oswald:wght@300;400;500;600&display=swap');
+
+  :root{
+    --ink:#111111;
+    --paper:#f1f0ec;
+    --paper-shadow:#d8d6cf;
+    --wax:#1a1a1a;
+    --gold:#bda36b;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    background:#0c0c0c;
+    font-family:'Oswald',sans-serif;
+    overflow-x:hidden;
+  }
+
+  /* ---------- STAGE (sobre) ---------- */
+  #stage{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:24px;
+  }
+
+  #stage::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.04), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 40%);
+    pointer-events:none;
+  }
+
+  .hint{
+    position:absolute;
+    bottom:8%;
+    left:50%;
+    transform:translateX(-50%);
+    color:#888;
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    opacity:.8;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+
+  .envelope-wrap{
+    width:min(86vw,360px);
+    aspect-ratio:3/2;
+    position:relative;
+    cursor:pointer;
+    perspective:1400px;
+  }
+
+  .envelope-base{
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,#fafafa,#e2e0da);
+    border:1px solid #cfcdc5;
+    box-shadow:0 30px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.02) inset;
+    overflow:hidden;
+  }
+
+  /* envelope side triangles to give pocket illusion */
+  .envelope-base::before,
+  .envelope-base::after{
+    content:"";
+    position:absolute;
+    width:0;height:0;
+    border-style:solid;
+  }
+  .envelope-base::before{
+    bottom:0;left:0;
+    border-width:0 0 50% 50%;
+    border-color:transparent transparent #e8e6e0 transparent;
+  }
+  .envelope-base::after{
+    bottom:0;right:0;
+    border-width:0 50% 50% 0;
+    border-color:transparent transparent #e8e6e0 transparent;
+  }
+
+  .stamp{
+    position:absolute;
+    top:14px;right:14px;
+    width:46px;height:56px;
+    border:2px dashed #b9b6ac;
+    display:flex;align-items:center;justify-content:center;
+    color:#9a978d;
+    font-family:'Anton',sans-serif;
+    font-size:20px;
+    letter-spacing:1px;
+    background:rgba(255,255,255,.4);
+  }
+
+  .to-line{
+    position:absolute;
+    bottom:22%;
+    left:12%;
+    font-family:'Caveat',cursive;
+    font-size:22px;
+    color:#3a3a3a;
+  }
+  .to-line span{
+    display:block;
+    font-family:'Oswald',sans-serif;
+    font-size:10px;
+    letter-spacing:2px;
+    color:#9a978d;
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+
+  /* card peeking out, behind flap */
+  .card-peek{
+    position:absolute;
+    left:6%;right:6%;
+    top:8%;
+    height:84%;
+    background:#0e0e0e;
+    border-radius:2px;
+    z-index:2;
+    transform:translateY(0%);
+    transition:transform 1.1s cubic-bezier(.18,.89,.32,1.16) .55s;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .card-peek .num{
+    margin-top:10%;
+    font-family:'Anton',sans-serif;
+    color:#fff;
+    font-size:15vw;
+    max-font-size:64px;
+    line-height:1;
+    -webkit-text-stroke:1px #fff;
+  }
+
+  /* flap (triangle) that opens */
+  .flap{
+    position:absolute;
+    top:0;left:0;right:0;
+    height:52%;
+    background:linear-gradient(135deg,#f4f3ef,#dedcd5);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top center;
+    transition:transform 1s cubic-bezier(.65,0,.35,1);
+    z-index:4;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+
+  .seal{
+    position:absolute;
+    top:42%;left:50%;
+    width:56px;height:56px;
+    background:radial-gradient(circle at 35% 30%, #2c2c2c, var(--wax) 70%);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:5;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,.5);
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .seal svg{width:28px;height:28px;fill:#cfae6e;}
+
+  .envelope-wrap.open .flap{
+    transform:rotateX(180deg);
+  }
+  .envelope-wrap.open .seal{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.4);
+  }
+  .envelope-wrap.open .card-peek{
+    transform:translateY(-145%);
+    transition:transform 1.1s cubic-bezier(.22,.8,.3,1.2) .35s;
+  }
+
+  /* ---------- INVITATION ---------- */
+  #invitation{
+    position:fixed;
+    inset:0;
+    background:#f1f0ec;
+    opacity:0;
+    visibility:hidden;
+    overflow-y:auto;
+    transition:opacity .9s ease;
+    z-index:10;
+  }
+  #invitation.show{
+    opacity:1;
+    visibility:visible;
+  }
+
+  .card{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    padding:48px 32px 70px;
+    position:relative;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at top, rgba(0,0,0,.025), transparent 60%);
+  }
+
+  .texture-dot{
+    position:absolute;
+    border-radius:50%;
+    background:#1a1a1a;
+    opacity:.7;
+  }
+
+  .crown{
+    width:64px;
+    margin:4px auto 18px;
+    display:block;
+  }
+
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:6px;
+    font-weight:500;
+    color:#1a1a1a;
+    text-transform:uppercase;
+  }
+
+  .quince{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(120px,38vw,210px);
+    line-height:.8;
+    color:#0e0e0e;
+    margin:18px 0 6px;
+    letter-spacing:-2px;
+    position:relative;
+    -webkit-text-stroke: 0px;
+  }
+  .quince::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-6px;
+    transform:translateX(-50%) rotate(-1.5deg);
+    width:78%;
+    height:14px;
+    background:#0e0e0e;
+    opacity:.95;
+  }
+
+  .ribbon{
+    display:inline-block;
+    background:#0e0e0e;
+    color:#f5f4f1;
+    padding:10px 22px;
+    margin-top:26px;
+    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-size:26px;
+    letter-spacing:1px;
+    transform:rotate(-1deg);
+  }
+
+  .details{
+    margin-top:42px;
+    text-align:left;
+    display:inline-flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .detail-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-size:16px;
+    font-weight:500;
+    letter-spacing:.5px;
+    color:#161616;
+  }
+  .detail-row svg{width:20px;height:20px;flex-shrink:0;}
+
+  .divider{
+    width:60%;
+    height:1px;
+    background:#1a1a1a;
+    opacity:.25;
+    margin:34px auto;
+  }
+
+  .no-faltes{
+    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-size:38px;
+    color:#0e0e0e;
+  }
+
+  .dresscode{
+    margin-top:40px;
+    background:#0e0e0e;
+    color:#f5f4f1;
+    padding:26px 18px 30px;
+    position:relative;
+    transform:rotate(.4deg);
+  }
+  .dresscode .label{
+    font-size:13px;
+    letter-spacing:4px;
+    font-weight:500;
+    text-transform:uppercase;
+    color:#cfcdc5;
+  }
+  .dresscode .blanca{
+    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-size:58px;
+    margin:4px 0;
+    color:#fff;
+  }
+  .dresscode .sub{
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#cfcdc5;
+  }
+
+  .footer-note{
+    margin-top:46px;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#8a8a8a;
+    text-transform:uppercase;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .flap,.card-peek,.seal,#invitation{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="envelope-wrap" id="envelope">
+    <div class="card-peek"><div class="num">15</div></div>
+    <div class="envelope-base">
+      <div class="stamp">XV</div>
+      <div class="to-line"><span>Para</span>Vos ♥</div>
+    </div>
+    <div class="flap"></div>
+    <div class="seal">
+      <svg viewBox="0 0 24 24"><path d="M12 2L9 8l-6 1 4.5 4.4L6.4 20 12 17l5.6 3-1.1-6.6L21 9l-6-1z"/></svg>
+    </div>
+  </div>
+  <div class="hint">Toca el sobre para abrirlo</div>
+</div>
+
+<div id="invitation">
+  <div class="card">
+    <svg class="crown" viewBox="0 0 100 60" fill="none" stroke="#111" stroke-width="4" stroke-linejoin="round">
+      <path d="M10 50 L15 20 L32 38 L50 12 L68 38 L85 20 L90 50 Z"/>
+    </svg>
+
+    <div class="eyebrow">Estás invitado a</div>
+
+    <div class="quince">15</div>
+
+    <div class="ribbon">Una noche para recordar</div>
+
+    <div class="details">
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        28 / 07
+      </div>
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
+        Conde del Maule 4470
+      </div>
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        A partir de las 21:00 hs
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="no-faltes">¡No faltes!</div>
+
+    <div class="dresscode">
+      <div class="label">Vestimenta</div>
+      <div class="blanca">Blanca</div>
+      <div class="sub">Para todos los invitados</div>
+    </div>
+
+    <div class="footer-note">Con cariño, te espero ahí</div>
+  </div>
+</div>
+
+<script>
+  const envelope = document.getElementById('envelope');
+  const invitation = document.getElementById('invitation');
+  const stage = document.getElementById('stage');
+
+  function openInvite(){
+    envelope.classList.add('open');
+    setTimeout(()=>{
+      invitation.classList.add('show');
+      document.body.style.overflow = 'auto';
+    }, 1400);
+    envelope.style.pointerEvents = 'none';
+  }
+
+  envelope.addEventListener('click', openInvite);
+</script>
+
+</body>
+  </html>
+  
