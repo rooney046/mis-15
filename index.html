@@ -399,7 +399,7 @@
       <div class="sub">Para todos los invitados</div>
     </div>
 
-    <div class="footer-note">Con cariño, te espero ahí</div>
+    <div class="footer-note" id="footerNote">Con cariño, te espero ahí</div>
   </div>
 </div>
 
@@ -407,7 +407,9 @@
   const params = new URLSearchParams(window.location.search);
   const nombre = params.get('nombre');
   if (nombre) {
-    document.getElementById('guestName').textContent = decodeURIComponent(nombre);
+    const decoded = decodeURIComponent(nombre);
+    document.getElementById('guestName').textContent = decoded;
+    document.getElementById('footerNote').textContent = decoded + ', te espero ahí';
   }
 
   const envelope = document.getElementById('envelope');
