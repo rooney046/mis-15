@@ -353,7 +353,7 @@
     <div class="card-peek"><div class="num">15</div></div>
     <div class="envelope-base">
       <div class="stamp">XV</div>
-      <div class="to-line"><span>Para</span>Vos ♥</div>
+      <div class="to-line"><span>Para</span><span id="guestName">Vos</span> ♥</div>
     </div>
     <div class="flap"></div>
     <div class="seal">
@@ -404,6 +404,12 @@
 </div>
 
 <script>
+  const params = new URLSearchParams(window.location.search);
+  const nombre = params.get('nombre');
+  if (nombre) {
+    document.getElementById('guestName').textContent = decodeURIComponent(nombre);
+  }
+
   const envelope = document.getElementById('envelope');
   const invitation = document.getElementById('invitation');
   const stage = document.getElementById('stage');
@@ -421,5 +427,4 @@
 </script>
 
 </body>
-  </html>
-  
+</html>
