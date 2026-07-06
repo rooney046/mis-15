@@ -177,7 +177,6 @@
     transform:translateX(-50%) rotate(-1.5deg);
     width:78%;height:12px;
     background:linear-gradient(90deg,transparent,var(--azul),var(--azul-claro),var(--azul),transparent);
-    opacity:1;
   }
 
   .ribbon{
@@ -213,29 +212,31 @@
     text-shadow:0 0 20px rgba(20,0,212,.8);
   }
 
-  .dresscode{
+  /* nombre del invitado al final */
+  .guest-block{
     margin-top:40px;
-    background:linear-gradient(135deg,var(--azul),#0d00a0);
-    color:#fff;
     padding:26px 18px 30px;
-    transform:rotate(.4deg);
+    background:linear-gradient(135deg,var(--azul),#0d00a0);
     box-shadow:0 8px 30px rgba(20,0,212,.5);
+    transform:rotate(.4deg);
   }
-  .dresscode .label{
+  .guest-block .label{
     font-size:13px;letter-spacing:4px;
-    font-weight:500;text-transform:uppercase;color:rgba(255,255,255,.6);
+    font-weight:500;text-transform:uppercase;
+    color:rgba(255,255,255,.6);
   }
-  .dresscode .blanca{
+  .guest-block .nombre{
     font-family:'Caveat',cursive;font-weight:700;
-    font-size:58px;margin:4px 0;color:#fff;
+    font-size:52px;margin:4px 0;color:#fff;
+    line-height:1.1;
   }
-  .dresscode .sub{
+  .guest-block .sub{
     font-size:12px;letter-spacing:2px;
     text-transform:uppercase;color:rgba(255,255,255,.6);
   }
 
   .footer-note{
-    margin-top:46px;font-size:11px;
+    margin-top:40px;font-size:11px;
     letter-spacing:2px;color:#555;text-transform:uppercase;
   }
 
@@ -273,7 +274,7 @@
       <path d="M10 50 L15 20 L32 38 L50 12 L68 38 L85 20 L90 50 Z" stroke="url(#cg)"/>
     </svg>
 
-    <div class="eyebrow">Estás invitado a</div>
+    <div class="eyebrow">Estás invitado a mis</div>
     <div class="quince">15</div>
     <div class="ribbon">Una noche para recordar</div>
 
@@ -288,20 +289,20 @@
       </div>
       <div class="detail-row">
         <svg viewBox="0 0 24 24" fill="none" stroke="#5c4aff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        A partir de las 21:00 hs
+        A partir de las 20:00 hs
       </div>
     </div>
 
     <div class="divider"></div>
     <div class="no-faltes">¡No faltes!</div>
 
-    <div class="dresscode">
-      <div class="label">Vestimenta</div>
-      <div class="blanca">Blanca</div>
-      <div class="sub">Para todos los invitados</div>
+    <div class="guest-block">
+      <div class="label">Para</div>
+      <div class="nombre" id="guestNameCard">Vos</div>
+      <div class="sub">Con cariño, te espero ahí</div>
     </div>
 
-    <div class="footer-note" id="footerNote">Con cariño, te espero ahí</div>
+    <div class="footer-note">Una noche para recordar · 28/07</div>
   </div>
 </div>
 
@@ -311,7 +312,7 @@
   if (nombre) {
     const decoded = decodeURIComponent(nombre);
     document.getElementById('guestName').textContent = decoded;
-    document.getElementById('footerNote').textContent = decoded + ', te espero ahí';
+    document.getElementById('guestNameCard').textContent = decoded;
   }
 
   const envelope = document.getElementById('envelope');
