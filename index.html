@@ -43,7 +43,6 @@
   }
   @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.9}}
 
-  /* ---- SOBRE ---- */
   .envelope-wrap{
     width:min(86vw,360px);aspect-ratio:3/2;
     position:relative;cursor:pointer;perspective:1400px;
@@ -83,7 +82,7 @@
     font-family:'Caveat',cursive;font-size:22px;
     color:#ddd;
   }
-  .to-line span{
+  .to-line span.label{
     display:block;font-family:'Oswald',sans-serif;
     font-size:10px;letter-spacing:2px;
     color:var(--azul-claro);text-transform:uppercase;margin-bottom:2px;
@@ -136,7 +135,6 @@
     transition:transform 1.1s cubic-bezier(.22,.8,.3,1.2) .35s;
   }
 
-  /* ---- INVITACIÓN ---- */
   #invitation{
     position:fixed;inset:0;
     background:#080808;
@@ -165,8 +163,7 @@
   .quince{
     font-family:'Anton',sans-serif;
     font-size:clamp(120px,38vw,210px);
-    line-height:.8;
-    color:#fff;
+    line-height:.8;color:#fff;
     margin:18px 0 6px;letter-spacing:-2px;
     position:relative;
     text-shadow:0 0 60px rgba(20,0,212,.8),0 0 20px rgba(92,74,255,.4);
@@ -195,8 +192,7 @@
   }
   .detail-row{
     display:flex;align-items:center;gap:14px;
-    font-size:16px;font-weight:500;letter-spacing:.5px;
-    color:#ccc;
+    font-size:16px;font-weight:500;letter-spacing:.5px;color:#ccc;
   }
   .detail-row svg{width:20px;height:20px;flex-shrink:0;}
 
@@ -212,7 +208,6 @@
     text-shadow:0 0 20px rgba(20,0,212,.8);
   }
 
-  /* nombre del invitado al final */
   .guest-block{
     margin-top:40px;
     padding:26px 18px 30px;
@@ -227,8 +222,7 @@
   }
   .guest-block .nombre{
     font-family:'Caveat',cursive;font-weight:700;
-    font-size:52px;margin:4px 0;color:#fff;
-    line-height:1.1;
+    font-size:52px;margin:4px 0;color:#fff;line-height:1.1;
   }
   .guest-block .sub{
     font-size:12px;letter-spacing:2px;
@@ -252,7 +246,10 @@
     <div class="card-peek"><div class="num">15</div></div>
     <div class="envelope-base">
       <div class="stamp">XV</div>
-      <div class="to-line"><span>Para</span><span id="guestName">Vos</span> ♥</div>
+      <div class="to-line">
+        <span class="label">Para</span>
+        <span id="guestName">Vos</span> ♥
+      </div>
     </div>
     <div class="flap"></div>
     <div class="seal">
@@ -276,7 +273,7 @@
 
     <div class="eyebrow">Estás invitado a mis</div>
     <div class="quince">15</div>
-    <div class="ribbon">Una noche para recordarr</div>
+    <div class="ribbon">Una noche para recordar</div>
 
     <div class="details">
       <div class="detail-row">
@@ -299,7 +296,7 @@
     <div class="guest-block">
       <div class="label">Para</div>
       <div class="nombre" id="guestNameCard">Vos</div>
-      <div class="sub">Con cariño, te espero </div>
+      <div class="sub">Con cariño, te espero ahí</div>
     </div>
 
     <div class="footer-note">Una noche para recordar · 28/07</div>
@@ -307,27 +304,29 @@
 </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const nombre = params.get('nombre');
-  if (nombre) {
-    const decoded = decodeURIComponent(nombre);
-    document.getElementById('guestName').textContent = decoded;
-    document.getElementById('guestNameCard').textContent = decoded;
+  function getNombre() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('nombre') ? decodeURIComponent(params.get('nombre')) : null;
+    } catch(e) { return null; }
   }
 
-  const envelope = document.getElementById('envelope');
-  const invitation = document.getElementById('invitation');
+  document.addEventListener('DOMContentLoaded', function() {
+    const nombre = getNombre();
+    if (nombre) {
+      document.getElementById('guestName').textContent = nombre;
+      document.getElementById('guestNameCard').textContent = nombre;
+    }
 
-  function openInvite(){
-    envelope.classList.add('open');
-    setTimeout(()=>{
-      invitation.classList.add('show');
-      document.body.style.overflow = 'auto';
-    }, 1400);
-    envelope.style.pointerEvents = 'none';
-  }
-
-  envelope.addEventListener('click', openInvite);
+    document.getElementById('envelope').addEventListener('click', function() {
+      this.classList.add('open');
+      this.style.pointerEvents = 'none';
+      setTimeout(function() {
+        document.getElementById('invitation').classList.add('show');
+        document.body.style.overflow = 'auto';
+      }, 1400);
+    });
+  });
 </script>
 </body>
 </html>
