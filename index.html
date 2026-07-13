@@ -306,12 +306,13 @@
 <script>
   function getNombre() {
     try {
-      const search = window.location.search;
-      const match = search.match(/[?&]nombre=([^&]*)/);
-      if (match) {
-        return decodeURIComponent(match[1].replace(/\+/g, ' '));
-      }
-      return null;
+      // Leer toda la URL incluyendo espacios y caracteres especiales
+      const full = window.location.href;
+      const idx = full.indexOf('nombre=');
+      if (idx === -1) return null;
+      const raw = full.substring(idx + 7);
+      // Decodificar %20, + y espacios literales
+      return decodeURIComponent(raw.replace(/\+/g, ' '));
     } catch(e) { return null; }
   }
 
